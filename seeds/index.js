@@ -1,5 +1,6 @@
 const mongoose = require(`mongoose`);
 const Property = require(`../models/property`);
+const { helperFunctions } = require(`./helpers`);
 
 // connecting to the localhost mongodb server
 mongoose.connect(`mongodb://localhost:27017/propertyApp`, {
@@ -15,11 +16,25 @@ db.once(`open`, () => {
 });
 
 // clearing database before seeding
-const seedDB = async () => {
-  await Property.deleteMany({});
-  const c = new Property({ title: `Property name xyz` });
-  await c.save();
-  console.log(c);
+const seedDataToDB = async () => {
+  // clear the property collection before adding any new property
+  // console.log(`=== Deleting all data on DB ===`);
+  // await Property.deleteMany({});
+
+  // using the helper function to generate a property
+  // console.log(`=== CREATING A JS PROPERTY OBJECT ===`);
+  const property = helperFunctions.generateProperty();
+  // console.log(property);
+
+  // create a new MongoDB Object containing property details
+  // console.log(`=== CREATING A MONGO PROPERTY OBJECT ===`);
+  const propertyMongoObject = new Property({ ...property });
+
+  // save to Mongo
+  // console.log(`=== BEGINNING DB DATA SAVE ===`);
+  await propertyMongoObject.save();
+  // console.log(`=== DATA SAVED ===`);
+  console.log(propertyMongoObject);
 };
 
-seedDB();
+seedDataToDB();
