@@ -39,6 +39,19 @@ app.get(`/properties`, async (req, res) => {
   res.render(`properties/index`, { properties, agents });
 });
 
+app.get(`/properties/:id`, async (req, res) => {
+  console.log(`GET: /properties/:id`);
+  const { id } = req.params;
+
+  const property = await Property.findById(id);
+  // console.log(`🚀 ✩ app.get ✩ property`, property);
+
+  const agent = await Agent.findOne({ agentCode: property.agentCode });
+  // console.log(`🚀 ✩ app.get ✩ agent`, agent);
+
+  res.render(`properties/showProperty`, { property, agent });
+});
+
 // agent routes
 app.get(`/agents`, async (req, res) => {
   console.log(`GET: /agents`);

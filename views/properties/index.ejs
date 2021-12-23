@@ -11,7 +11,7 @@
     <ul>
       <% properties.forEach(property => { %>
         <% const agentIndex = agents.findIndex((agent) => agent.agentCode === property.agentCode); const agent = agents[agentIndex]; %>
-        <li><%= property.title %> listed by <%= agent.name %></li>
+        <li><a href="/properties/<%= property._id %>"><%= property.title %></a> listed by <%= agent.name %></li>
       <% }) %>
     </ul>
   </body>
