@@ -31,6 +31,7 @@ app.get(`/`, (req, res) => {
   res.render(`home`);
 });
 
+// property routes
 app.get(`/properties`, async (req, res) => {
   console.log(`GET: /properties`);
   const properties = await Property.find({});
@@ -38,6 +39,12 @@ app.get(`/properties`, async (req, res) => {
   res.render(`properties/index`, { properties, agents });
 });
 
+// agent routes
+app.get(`/agents`, async (req, res) => {
+  console.log(`GET: /agents`);
+  const agents = await Agent.find({});
+  res.render(`agents/index`, { agents });
+});
 // starting the server
 app.listen(3000, () => {
   console.log(`Serving on port 3000`);
