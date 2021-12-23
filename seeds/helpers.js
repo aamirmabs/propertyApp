@@ -10,6 +10,9 @@ const {
   agentPhones,
 } = dictionary;
 
+const totalProperties = 10;
+const totalAgents = 3;
+
 const helperFunctions = {
   randMinMax: function (min, max) {
     return (
@@ -34,7 +37,7 @@ const helperFunctions = {
     const type = this.randArrEle(types);
 
     const propertyObject = {
-      agentCode: (`0` + this.randMinMaxFloor(1, 15)).slice(-2),
+      agentCode: (`0` + this.randMinMaxFloor(1, totalAgents)).slice(-2),
       title: `${bedrooms}BHK ${type} in ${area}`,
       // type: types[Math.floor(Math.random() * types.length)],
       type: type,
@@ -53,24 +56,24 @@ const helperFunctions = {
         this.randArrEle(features),
         this.randArrEle(features),
       ],
-      description: `${this.randArrEle(
-        descriptions
-      )} The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should turn around and return to its own, safe country.
-
-      ${this.randArrEle(
-        descriptions
-      )} Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.
-
-      ${this.randArrEle(
-        descriptions
-      )} Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way.`,
+      description: [
+        `${this.randArrEle(
+          descriptions
+        )} The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should turn around and return to its own, safe country.`,
+        `${this.randArrEle(
+          descriptions
+        )} Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.`,
+        `${this.randArrEle(
+          descriptions
+        )} Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way.`,
+      ],
     };
 
     return propertyObject;
   },
 
   generateAgent: function (code) {
-    const codeString = (`0` + (code + 1)).slice(-2);
+    const codeString = (`0` + code).slice(-2);
 
     const agentObject = {
       agentCode: codeString,
@@ -86,3 +89,5 @@ const helperFunctions = {
 };
 
 module.exports.helperFunctions = helperFunctions;
+module.exports.totalAgents = totalAgents;
+module.exports.totalProperties = totalProperties;

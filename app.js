@@ -2,6 +2,7 @@ const express = require("express");
 const path = require(`path`);
 const mongoose = require(`mongoose`);
 const Property = require(`./models/property`);
+const Agent = require(`./models/agent`);
 
 // connecting to the localhost mongodb server
 mongoose.connect(`mongodb://localhost:27017/propertyApp`, {
@@ -25,19 +26,50 @@ app.set("views", path.join(__dirname, `views`));
 
 // route management
 app.get(`/`, (req, res) => {
+  console.log(`GET: /`);
   // res.send(`GET: /`);
   res.render(`home`);
 });
 
-app.get(`/makeproperty`, async (req, res) => {
-  const property = new Property({
-    title: `3 BHK in Piccadilly, Manchester`,
-    rent: 670,
-    description: `A very nice property located in the middle of the town center with convenient connectivity to all parts of Manchester`,
-    location: `Manchester`,
-  });
-  await property.save();
-  res.send(property);
+// property routes
+app.get(`/properties`, async (req, res) => {
+  console.log(`GET: /properties`);
+  const properties = await Property.find({});
+  const agents = await Agent.find({});
+  res.render(`properties/index`, { properties, agents });
+});
+
+app.get(`/properties/:id`, async (req, res) => {
+  console.log(`GET: /properties/:id`);
+  const { id } = req.params;
+
+  const property = await Property.findById(id);
+  // console.log(`🚀 ✩ app.get ✩ property`, property);
+
+  const agent = await Agent.findOne({ agentCode: property.agentCode });
+  // console.log(`🚀 ✩ app.get ✩ agent`, agent);
+
+  res.render(`properties/showProperty`, { property, agent });
+});
+
+// agent routes
+app.get(`/agents`, async (req, res) => {
+  console.log(`GET: /agents`);
+  const agents = await Agent.find({});
+  res.render(`agents/index`, { agents });
+});
+
+app.get(`/agents/:id`, async (req, res) => {
+  console.log(`GET: /agents/:id`);
+  const { id } = req.params;
+
+  const agent = await Agent.findById(id);
+  // console.log(`🚀 ✩ app.get ✩ agent`, agent);
+
+  const properties = await Property.find({ agentCode: agent.agentCode });
+  // console.log(`🚀 ✩ app.get ✩ properties`, properties);
+
+  res.render(`agents/showAgent`, { agent, properties });
 });
 
 // starting the server
