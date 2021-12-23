@@ -1,7 +1,7 @@
 const mongoose = require(`mongoose`);
 const Property = require(`../models/property`);
 const Agent = require(`../models/agent`);
-const { helperFunctions } = require(`./helpers`);
+const { helperFunctions, totalProperties, totalAgents } = require(`./helpers`);
 
 // connecting to the localhost mongodb server
 mongoose.connect(`mongodb://localhost:27017/propertyApp`, {
@@ -23,8 +23,8 @@ const seedDataToDB = async () => {
   await Property.deleteMany({});
   await Agent.deleteMany({});
 
-  // generating 50 properties
-  for (let index = 0; index < 50; index++) {
+  // generating properties
+  for (let index = 0; index < totalProperties; index++) {
     console.log(`Generating Property ${index + 1}`);
     // using the helper function to generate a property
     // console.log(`=== CREATING A JS PROPERTY OBJECT ===`);
@@ -39,12 +39,12 @@ const seedDataToDB = async () => {
     // console.log(`=== BEGINNING DB DATA SAVE ===`);
     await propertyMongoObject.save();
 
-    console.log(`=== PROPERTY DATA SAVED ===`);
+    // console.log(`=== PROPERTY DATA SAVED ===`);
     // console.log(propertyMongoObject);
   }
 
-  // generating 10 agents
-  for (let index = 0; index < 10; index++) {
+  // generating agents
+  for (let index = 0; index < totalAgents; index++) {
     console.log(`Generating Agent ${index + 1}`);
 
     // using the helper function to generate an agent
@@ -60,7 +60,7 @@ const seedDataToDB = async () => {
     // console.log(`=== BEGINNING DB DATA SAVE ===`);
     await agentMongoObject.save();
 
-    console.log(`=== AGENT DATA SAVED ===`);
+    // console.log(`=== AGENT DATA SAVED ===`);
     // console.log(agentMongoObject);
   }
 };

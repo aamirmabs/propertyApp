@@ -2,6 +2,7 @@ const express = require("express");
 const path = require(`path`);
 const mongoose = require(`mongoose`);
 const Property = require(`./models/property`);
+const Agent = require(`./models/agent`);
 
 // connecting to the localhost mongodb server
 mongoose.connect(`mongodb://localhost:27017/propertyApp`, {
@@ -25,19 +26,16 @@ app.set("views", path.join(__dirname, `views`));
 
 // route management
 app.get(`/`, (req, res) => {
+  console.log(`GET: /`);
   // res.send(`GET: /`);
   res.render(`home`);
 });
 
-app.get(`/makeproperty`, async (req, res) => {
-  const property = new Property({
-    title: `3 BHK in Piccadilly, Manchester`,
-    rent: 670,
-    description: `A very nice property located in the middle of the town center with convenient connectivity to all parts of Manchester`,
-    location: `Manchester`,
-  });
-  await property.save();
-  res.send(property);
+app.get(`/properties`, async (req, res) => {
+  console.log(`GET: /properties`);
+  const properties = await Property.find({});
+  const agents = await Agent.find({});
+  res.render(`properties/index`, { properties, agents });
 });
 
 // starting the server

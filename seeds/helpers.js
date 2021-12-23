@@ -10,6 +10,9 @@ const {
   agentPhones,
 } = dictionary;
 
+const totalProperties = 10;
+const totalAgents = 3;
+
 const helperFunctions = {
   randMinMax: function (min, max) {
     return (
@@ -34,7 +37,7 @@ const helperFunctions = {
     const type = this.randArrEle(types);
 
     const propertyObject = {
-      agentCode: (`0` + this.randMinMaxFloor(1, 15)).slice(-2),
+      agentCode: (`0` + this.randMinMaxFloor(1, totalAgents)).slice(-2),
       title: `${bedrooms}BHK ${type} in ${area}`,
       // type: types[Math.floor(Math.random() * types.length)],
       type: type,
@@ -70,7 +73,7 @@ const helperFunctions = {
   },
 
   generateAgent: function (code) {
-    const codeString = (`0` + (code + 1)).slice(-2);
+    const codeString = (`0` + code).slice(-2);
 
     const agentObject = {
       agentCode: codeString,
@@ -86,3 +89,5 @@ const helperFunctions = {
 };
 
 module.exports.helperFunctions = helperFunctions;
+module.exports.totalAgents = totalAgents;
+module.exports.totalProperties = totalProperties;
