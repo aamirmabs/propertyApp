@@ -1,5 +1,6 @@
 const mongoose = require(`mongoose`);
 const Property = require(`../models/property`);
+const Agent = require(`../models/agent`);
 const { helperFunctions } = require(`./helpers`);
 
 // connecting to the localhost mongodb server
@@ -33,8 +34,25 @@ const seedDataToDB = async () => {
   // save to Mongo
   // console.log(`=== BEGINNING DB DATA SAVE ===`);
   await propertyMongoObject.save();
-  // console.log(`=== DATA SAVED ===`);
-  console.log(propertyMongoObject);
+
+  console.log(`=== PROPERTY DATA SAVED ===`);
+  // console.log(propertyMongoObject);
+
+  // using the helper function to generate an agent
+  // console.log(`=== CREATING A JS AGENT OBJECT ===`);
+  const agent = helperFunctions.generateAgent();
+  // console.log(agent);
+
+  // create a new MongoDB Object containing agent details
+  // console.log(`=== CREATING A MONGO AGENT OBJECT ===`);
+  const agentMongoObject = new Agent({ ...agent });
+
+  // save to Mongo
+  // console.log(`=== BEGINNING DB DATA SAVE ===`);
+  await agentMongoObject.save();
+
+  console.log(`=== AGENT DATA SAVED ===`);
+  // console.log(agentMongoObject);
 };
 
 seedDataToDB();
