@@ -20,39 +20,49 @@ db.once(`open`, () => {
 const seedDataToDB = async () => {
   // clear the property collection before adding any new property
   // console.log(`=== Deleting all data on DB ===`);
-  // await Property.deleteMany({});
+  await Property.deleteMany({});
+  await Agent.deleteMany({});
 
-  // using the helper function to generate a property
-  // console.log(`=== CREATING A JS PROPERTY OBJECT ===`);
-  const property = helperFunctions.generateProperty();
-  // console.log(property);
+  // generating 50 properties
+  for (let index = 0; index < 50; index++) {
+    console.log(`Generating Property ${index + 1}`);
+    // using the helper function to generate a property
+    // console.log(`=== CREATING A JS PROPERTY OBJECT ===`);
+    const property = helperFunctions.generateProperty();
+    // console.log(property);
 
-  // create a new MongoDB Object containing property details
-  // console.log(`=== CREATING A MONGO PROPERTY OBJECT ===`);
-  const propertyMongoObject = new Property({ ...property });
+    // create a new MongoDB Object containing property details
+    // console.log(`=== CREATING A MONGO PROPERTY OBJECT ===`);
+    const propertyMongoObject = new Property({ ...property });
 
-  // save to Mongo
-  // console.log(`=== BEGINNING DB DATA SAVE ===`);
-  await propertyMongoObject.save();
+    // save to Mongo
+    // console.log(`=== BEGINNING DB DATA SAVE ===`);
+    await propertyMongoObject.save();
 
-  console.log(`=== PROPERTY DATA SAVED ===`);
-  // console.log(propertyMongoObject);
+    console.log(`=== PROPERTY DATA SAVED ===`);
+    // console.log(propertyMongoObject);
+  }
 
-  // using the helper function to generate an agent
-  // console.log(`=== CREATING A JS AGENT OBJECT ===`);
-  const agent = helperFunctions.generateAgent();
-  // console.log(agent);
+  // generating 10 agents
+  for (let index = 0; index < 10; index++) {
+    console.log(`Generating Agent ${index + 1}`);
 
-  // create a new MongoDB Object containing agent details
-  // console.log(`=== CREATING A MONGO AGENT OBJECT ===`);
-  const agentMongoObject = new Agent({ ...agent });
+    // using the helper function to generate an agent
+    // console.log(`=== CREATING A JS AGENT OBJECT ===`);
+    const agent = helperFunctions.generateAgent(index + 1);
+    // console.log(agent);
 
-  // save to Mongo
-  // console.log(`=== BEGINNING DB DATA SAVE ===`);
-  await agentMongoObject.save();
+    // create a new MongoDB Object containing agent details
+    // console.log(`=== CREATING A MONGO AGENT OBJECT ===`);
+    const agentMongoObject = new Agent({ ...agent });
 
-  console.log(`=== AGENT DATA SAVED ===`);
-  // console.log(agentMongoObject);
+    // save to Mongo
+    // console.log(`=== BEGINNING DB DATA SAVE ===`);
+    await agentMongoObject.save();
+
+    console.log(`=== AGENT DATA SAVED ===`);
+    // console.log(agentMongoObject);
+  }
 };
 
 seedDataToDB();
