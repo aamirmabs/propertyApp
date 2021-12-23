@@ -58,6 +58,20 @@ app.get(`/agents`, async (req, res) => {
   const agents = await Agent.find({});
   res.render(`agents/index`, { agents });
 });
+
+app.get(`/agents/:id`, async (req, res) => {
+  console.log(`GET: /agents/:id`);
+  const { id } = req.params;
+
+  const agent = await Agent.findById(id);
+  // console.log(`🚀 ✩ app.get ✩ agent`, agent);
+
+  const properties = await Property.find({ agentCode: agent.agentCode });
+  // console.log(`🚀 ✩ app.get ✩ properties`, properties);
+
+  res.render(`agents/showAgent`, { agent, properties });
+});
+
 // starting the server
 app.listen(3000, () => {
   console.log(`Serving on port 3000`);

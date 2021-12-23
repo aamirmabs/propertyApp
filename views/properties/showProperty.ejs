@@ -27,7 +27,7 @@
       <p><%= paragraph %></p>
     <% }) %>
     <h2>Agent Details</h2>
-    <strong>Name</strong>: <%= agent.name %></br>
+    <strong>Name</strong>: <a href="/agents/<%= agent._id %>"><%= agent.name %></a></br>
     <strong>Address</strong>: <%= agent.address %></br>
     <strong>Phone</strong>: <%= agent.phone %></br>
   </body>
