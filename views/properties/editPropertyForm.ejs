@@ -12,7 +12,7 @@
   <%- include(`../partials/nav.ejs`) %>
   <% const {_id, title, type, rent, area, postcode, bedrooms, bathrooms, latitude, longitude, features, description} = property; %>
     <h1>Edit Property: <%= title %></h1>
-    <form action="" method="post">
+    <form action="/properties/<%= _id %>?_method=PUT" method="post">
       <div>
         <label for="title">Title</label></br>
         <input type="text" name="title" id="title"
@@ -59,12 +59,8 @@
       </div>
       <div>
         <label for="title">Description</label></br>
-        <% let descriptionString = ``; %>
-        <% description.forEach(para => { %>
-          <% descriptionString = descriptionString + `\n\n` +  para; %>
-        <% }) %>
         <textarea name="description" id="description" cols="30"
-          rows="10"><%= descriptionString %></textarea>
+          rows="10"><%= description %></textarea>
       </div>
       <div>
         <button type="submit">Save</button>
