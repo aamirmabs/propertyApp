@@ -71,12 +71,24 @@ app.get(`/properties/:id`, async (req, res) => {
   // const { id } = req.params;
 
   const property = await Property.findById(req.params.id);
-  // console.log(`🚀 ✩ app.get ✩ property`, property);
+  // // console.log(`🚀 ✩ app.get ✩ property`, property);
 
   const agent = await Agent.findOne({ agentCode: property.agentCode });
-  // console.log(`🚀 ✩ app.get ✩ agent`, agent);
+  // // console.log(`🚀 ✩ app.get ✩ agent`, agent);
 
   res.render(`properties/showProperty`, { property, agent });
+});
+
+app.get(`/properties/:id/edit/`, (req, res) => {
+  const { id } = req.params;
+  console.log(`GET: /properties/${id}/edit/`);
+
+  // getting the property data from the DB
+  const property = await Property.findById(id);
+  // console.log(`🚀 ✩ app.get ✩ property`, property);
+
+  // res.send(`GET: /properties/${id}/edit/`);
+  res.render(`properties/editPropertyForm`, { property });
 });
 
 // agent routes
@@ -91,10 +103,10 @@ app.get(`/agents/:id`, async (req, res) => {
   const { id } = req.params;
 
   const agent = await Agent.findById(id);
-  // console.log(`🚀 ✩ app.get ✩ agent`, agent);
+  // // console.log(`🚀 ✩ app.get ✩ agent`, agent);
 
   const properties = await Property.find({ agentCode: agent.agentCode });
-  // console.log(`🚀 ✩ app.get ✩ properties`, properties);
+  // // console.log(`🚀 ✩ app.get ✩ properties`, properties);
 
   res.render(`agents/showAgent`, { agent, properties });
 });
