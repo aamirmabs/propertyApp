@@ -4,8 +4,9 @@ const Schema = mongoose.Schema;
 const PropertiesSchema = new Schema({
   agentCode: String,
   title: String,
+  image: String,
   type: String,
-  rent: String,
+  rent: Number,
   area: String,
   postcode: String,
   bedrooms: Number,

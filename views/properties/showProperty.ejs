@@ -11,13 +11,14 @@
   <p>Latitude: <%= property.latitude %></p>
   <p>Longitude: <%= property.longitude %></p>
   <h2>Features: </h2>
+  <img src="<%= property.image %>" alt="<%= property.title %>">
   <ul>
     <% property.features.forEach(feature => { %>
       <li><%= feature %></li>
     <% }) %>
   </ul>
   <h2>Description</h2>
-  <% property.description %>
+  <%= property.description %>
   <h2>Agent Details</h2>
   <strong>Name</strong>: <a href="/agents/<%= agent._id %>"><%= agent.name %></a></br>
   <strong>Address</strong>: <%= agent.address %></br>
