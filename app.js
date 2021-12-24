@@ -94,6 +94,12 @@ app.put(`/properties/:id`, async (req, res) => {
   console.log(`🚀 ✩ app.put ✩ updatedProperty`, updatedProperty);
   res.redirect(`/properties/${id}/`);
 });
+app.delete(`/properties/:id`, async (req, res) => {
+  const { id } = req.params;
+  console.log(`DELETE: /properties/${id}/`);
+  await Property.findByIdAndDelete(id);
+  res.redirect(`/properties/`);
+});
 
 app.get(`/properties/:id/edit/`, async (req, res) => {
   const { id } = req.params;
