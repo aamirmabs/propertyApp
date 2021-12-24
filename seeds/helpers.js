@@ -97,12 +97,12 @@ function generatePropertyFromForm(o) {
   // form data can have empty features which need to be removed
   const features = [];
   o.features.forEach((feature) => {
-    if (features !== ``) features.push(feature);
+    if (feature !== ``) features.push(feature);
   });
 
   const propertyObject = {
     agentCode: (`0` + randMinMaxFloor(1, totalAgents)).slice(-2),
-    title: `${bedrooms}BHK ${type} in ${area}`,
+    title: o.title || `${bedrooms}BHK ${type} in ${area}`,
     // type: types[Math.floor(Math.random() * types.length)],
     type: type.toLowerCase(),
     rent: o.rent || randMinMaxFloor(333, 3333),

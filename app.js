@@ -49,15 +49,21 @@ app.get(`/properties/add/`, (req, res) => {
   // res.send(`GET: /properties/add`);
   res.render(`properties/newPropertyForm`);
 });
-app.post(`/properties/add/`, (req, res) => {
+app.post(`/properties/add/`, async (req, res) => {
   console.log(`POST: /properties/add`);
-  console.log(`req.body: `, req.body);
 
+  // console.log(`=== Recieved form data ===`);
+  // processing the form submitted data to generate a property object
   const { generatePropertyFromForm } = require("./seeds/helpers");
-  // const { randMinMaxFloor, randArrEle, randMinMax, generatePropertyFromForm } = helperFunctions;
+  const newProperty = new Property({ ...generatePropertyFromForm(req.body) });
 
-  console.log(generatePropertyFromForm(req.body));
-  // res.render(`properties/newPropertyForm`);
+  // console.log(`=== Saving Property Data to MongoDB ===`);
+  // adding new property to MongoDB
+  await newProperty.save();
+  // console.log(`=== Save Successful ===`);
+
+  // console.log(`=== Redirecting to the newly added Property Page ===`);
+  res.redirect(`/properties/${newProperty._id}/`);
 });
 
 app.get(`/properties/:id`, async (req, res) => {
