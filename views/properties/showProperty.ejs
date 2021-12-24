@@ -7,6 +7,7 @@
     <title>Property: <%= property.title %> </title>
   </head>
   <body>
+    <%- include(`../partials/nav.ejs`) %>
     <h1><%= property.title %></h1>
     <p>Type: <%= property.type %></p>
     <p>Rent: <%= property.rent %></p>

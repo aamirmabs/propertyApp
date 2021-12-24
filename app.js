@@ -39,11 +39,18 @@ app.get(`/properties`, async (req, res) => {
   res.render(`properties/index`, { properties, agents });
 });
 
+app.get(`/properties/add/`, (req, res) => {
+  console.log(`GET: /properties/add`);
+  // console.log(``)
+  // res.send(`GET: /properties/add`);
+  res.render(`properties/newPropertyForm`);
+});
+
 app.get(`/properties/:id`, async (req, res) => {
   console.log(`GET: /properties/:id`);
-  const { id } = req.params;
+  // const { id } = req.params;
 
-  const property = await Property.findById(id);
+  const property = await Property.findById(req.params.id);
   // console.log(`🚀 ✩ app.get ✩ property`, property);
 
   const agent = await Agent.findOne({ agentCode: property.agentCode });

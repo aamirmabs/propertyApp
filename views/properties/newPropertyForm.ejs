@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<!-- < % - include(`../partials/nav.ejs`) % > -->
+	<form action="/properties/add/" method="post">
+	<div>
+		<label for="title">Title</label></br>
+		<input type="text" name="title" id="title" placeholder="eg: 3BHK in Deansgate">
+	</div>
+	<div>
+		<label for="rent">Rent</label></br>
+		<input type="number" name="rent" id="rent" placeholder="eg: 2" min="0" max="100000" step="5">
+	</div>
+	<div>
+		<label for="property-type">Type</label></br>
+		<select name="property-type" id="property-type">
+			<option value="House ">House </option>
+			<option value="Flat">Flat</option>
+			<option value="Apartment">Apartment</option>
+			<option value="Bungalow">Bungalow</option>
+		</select>
+	</div>
+	<div>
+		<label for="area">Area</label></br>
+		<input type="text" name="area" id="area" placeholder="eg: Deansgate">
+	</div>
+	<div>
+		<label for="bathrooms">Bathrooms</label></br>
+		<input type="number" name="bathrooms" id="bathrooms" placeholder="eg: 2" min="0" max="25">
+	</div>
+	<div>
+		<label for="bedrooms">Bedrooms</label></br>
+		<input type="number" name="bedrooms" id="bedrooms" placeholder="eg: 4" min="0" max="25">
+	</div>
+	<div>
+		<label for="title">Postcode</label></br>
+		<input type="text" name="title" id="title" placeholder="eg: M1 1QD">
+	</div>
+	<div>
+		<label for="title">Features</label></br>
+		<textarea name="features" id="features" cols="30" rows="5"></textarea>
+	</div>
+	<div>
+		<label for="title">Description</label></br>
+		<textarea name="description" id="description" cols="30" rows="10"></textarea>
+	</div>
+	<div>
+		<button type="submit">Add</button>
+		<button><a href="/properties/">Cancel</a></button>
+	</div>
+	</form>
+
+</body>
+
+</html>
