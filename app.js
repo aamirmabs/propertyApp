@@ -70,6 +70,7 @@ app.get(`/properties/:id`, async (req, res) => {
   res.render(`properties/showProperty`, { property, agent });
 });
 app.put(`/properties/:id`, async (req, res) => {
+  const { id } = req.params;
   const updatedProperty = await Property.findByIdAndUpdate(
     { _id: id },
     { ...req.body }

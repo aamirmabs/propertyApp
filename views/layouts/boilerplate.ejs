@@ -13,10 +13,14 @@
     crossorigin="anonymous">
 
 </head>
-<body>
+<body class="d-flex flex-column vh-100">
+  <%- include("../partials/nav") %>
+
   <main class="container">
     <%- body  %>
   </main>
+
+  <%- include("../partials/footer") %>
 
   <!-- Bootstrap 5 Compiled JS + Popper CDN link -->
   <script
