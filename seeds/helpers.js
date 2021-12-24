@@ -89,10 +89,12 @@ ${this.randArrEle(
   },
   generateAgent: function (code) {
     const codeString = (`0` + code).slice(-2);
+    const logoSrc = `/images/agentLogos/${agentNames[code]}.jpeg`;
 
     const agentObject = {
       agentCode: codeString,
       name: agentNames[code],
+      logo: logoSrc,
       address: agentAddresses[code],
       phone: agentPhones[code],
       // name: this.randArrEle(agentNames),

@@ -3,6 +3,7 @@
   <ul>
     <% agents.forEach(agent=> { %>
       <li>
+        <img src="<%= agent.logo %>" alt="<%= agent.name %>">
         <a href="/agents/<%= agent._id %>">
           <%= agent.name %>
         </a> Phone: <%= agent.phone %>
