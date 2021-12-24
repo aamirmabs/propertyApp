@@ -33,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 // override with POST having ?_method=DELETE/PATCH
 app.use(methodOverride("_method"));
 // using morgan to log request data
-app.use(morgan(`tiny`));
+app.use(morgan(`dev`));
 
 // route management
 app.get(`/`, (req, res) => {
@@ -103,6 +103,11 @@ app.get(`/agents/:id`, async (req, res) => {
   const properties = await Property.find({ agentCode: agent.agentCode });
 
   res.render(`agents/showAgent`, { agent, properties });
+});
+
+// 404 route
+app.use((req, res) => {
+  res.status(404).send("Resource not found");
 });
 
 // starting the server
