@@ -24,6 +24,10 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, `views`));
 
+// handling JSON and URL encoded form submissions
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // route management
 app.get(`/`, (req, res) => {
   console.log(`GET: /`);
@@ -44,6 +48,16 @@ app.get(`/properties/add/`, (req, res) => {
   // console.log(``)
   // res.send(`GET: /properties/add`);
   res.render(`properties/newPropertyForm`);
+});
+app.post(`/properties/add/`, (req, res) => {
+  console.log(`POST: /properties/add`);
+  console.log(`req.body: `, req.body);
+
+  const { generatePropertyFromForm } = require("./seeds/helpers");
+  // const { randMinMaxFloor, randArrEle, randMinMax, generatePropertyFromForm } = helperFunctions;
+
+  console.log(generatePropertyFromForm(req.body));
+  // res.render(`properties/newPropertyForm`);
 });
 
 app.get(`/properties/:id`, async (req, res) => {
