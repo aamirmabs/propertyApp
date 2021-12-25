@@ -82,6 +82,7 @@ app.put(`/properties/:id`, async (req, res) => {
   res.redirect(`/properties/${id}/`);
 });
 app.delete(`/properties/:id`, async (req, res) => {
+  console.log(`DELETE REQUEST`);
   const { id } = req.params;
   await Property.findByIdAndDelete(id);
   res.redirect(`/properties/`);
