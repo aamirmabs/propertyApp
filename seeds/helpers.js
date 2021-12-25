@@ -2,6 +2,7 @@ const { dictionary } = require(`./dictionary`);
 const {
   types,
   areas,
+  cities,
   postcodes,
   features,
   descriptions,
@@ -43,8 +44,12 @@ const helperFunctions = {
     return Math.floor(Math.random() * arr.length);
   },
   generateProperty: function () {
+    const rand = this.randMinMaxFloor(333, 3333);
+    const rent = rand - (rand % 5);
+
     const bedrooms = this.randMinMaxFloor(1, 5);
     const area = this.randArrEle(areas);
+    const city = this.randArrEle(cities);
     const type = this.randArrEle(types);
     const index = this.randMinMaxFloor(1, 99);
     const imageIndex = ("0" + index).slice(-2);
@@ -56,8 +61,9 @@ const helperFunctions = {
       // type: types[Math.floor(Math.random() * types.length)],
       type: type,
       image: imageSrc,
-      rent: this.randMinMaxFloor(333, 3333),
+      rent: rent,
       area: area,
+      city: city,
       postcode: this.randArrEle(postcodes),
       bedrooms: bedrooms,
       bathrooms: this.randMinMaxFloor(1, 3),
