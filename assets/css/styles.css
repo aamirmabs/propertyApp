@@ -1,3 +1,4 @@
+/* START PROPERTY LISTING PAGE */
 .property-listing-card {
   font: inherit;
 }
@@ -65,6 +66,46 @@
   font-weight: 700;
 }
 
-.logo-column img {
+.property-listing-card .agent-details-row .logo-column img {
   height: 50px;
 }
+/* END PROPERTY LISTING PAGE */
+
+/* START AGENT LISTING PAGE */
+.agent-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.agent-listing-card {
+  font: inherit;
+}
+
+.agent-listing-card .row {
+  font: inherit;
+}
+
+.agent-listing-card .row > [class*="col-"] {
+  display: flex;
+  flex-direction: column;
+}
+
+.agent-listing-card .agent-logo-column {
+  font: inherit;
+}
+
+.agent-logo-column a {
+  margin: 0 auto;
+}
+
+.agent-logo-column a img {
+  max-height: 75%;
+  max-width: 100%;
+}
+
+.agent-listing-card .agent-details-column {
+  font: inherit;
+}
+/* END AGENT LISTING PAGE */
