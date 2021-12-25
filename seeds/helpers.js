@@ -117,6 +117,7 @@ function generatePropertyFromForm(o) {
 
   const bedrooms = o.bedrooms || randMinMaxFloor(1, 5);
   const area = o.area || randArrEle(areas);
+  const city = o.city || randArrEle(cities);
   const type = o.type || randArrEle(types);
   const { lat, long } = helperFunctions.geoBetween(
     52.8571472,
@@ -138,6 +139,7 @@ function generatePropertyFromForm(o) {
     type: type.toLowerCase(),
     rent: o.rent || randMinMaxFloor(333, 3333),
     area: area,
+    city: city,
     postcode: o.postcode || randArrEle(postcodes),
     bedrooms: bedrooms,
     bathrooms: o.bathrooms || randMinMaxFloor(1, 3),
