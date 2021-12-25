@@ -3,6 +3,7 @@ const path = require(`path`);
 const mongoose = require(`mongoose`);
 const methodOverride = require("method-override");
 const morgan = require(`morgan`);
+const ejsMate = require(`ejs-mate`);
 
 const Property = require(`./models/property`);
 const Agent = require(`./models/agent`);
@@ -23,9 +24,15 @@ db.once(`open`, () => {
 // initialize app to express()
 const app = express();
 
+// using eja-mate engine
+app.engine(`ejs`, ejsMate);
 // setting ejs template engine and views base folder
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, `views`));
+
+// make /public accessible
+const publicDirectoryPath = path.join(__dirname, "./assets");
+app.use(express.static(publicDirectoryPath));
 
 // handling JSON and URL encoded form submissions
 app.use(express.json());
@@ -67,6 +74,7 @@ app.get(`/properties/:id`, async (req, res) => {
   res.render(`properties/showProperty`, { property, agent });
 });
 app.put(`/properties/:id`, async (req, res) => {
+  const { id } = req.params;
   const updatedProperty = await Property.findByIdAndUpdate(
     { _id: id },
     { ...req.body }
@@ -74,6 +82,7 @@ app.put(`/properties/:id`, async (req, res) => {
   res.redirect(`/properties/${id}/`);
 });
 app.delete(`/properties/:id`, async (req, res) => {
+  console.log(`DELETE REQUEST`);
   const { id } = req.params;
   await Property.findByIdAndDelete(id);
   res.redirect(`/properties/`);
