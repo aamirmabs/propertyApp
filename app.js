@@ -59,11 +59,26 @@ app.get(`/properties/add/`, (req, res) => {
   res.render(`properties/newPropertyForm`);
 });
 app.post(`/properties/add/`, async (req, res) => {
+  console.log(`In POST: /properties/add/`);
   // processing the form submitted data to generate a property object
   const { generatePropertyFromForm } = require("./seeds/helpers");
+  console.log(
+    `🚀 ✩ app.post ✩ generatePropertyFromForm`,
+    generatePropertyFromForm
+  );
   const newProperty = new Property({ ...generatePropertyFromForm(req.body) });
 
   await newProperty.save();
+});
+
+app.get(`/properties/generate`, async (req, res) => {
+  console.log(`In GET: /properties/generate`);
+  const { addPropertyGenerator } = require("./seeds/helpers");
+  const value = addPropertyGenerator();
+  const newProperty = new Property({ ...value });
+
+  await newProperty.save();
+  res.redirect(`/properties`);
 });
 
 app.get(`/properties/:id`, async (req, res) => {
