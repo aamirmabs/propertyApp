@@ -5,6 +5,8 @@ const methodOverride = require("method-override");
 const morgan = require(`morgan`);
 const ejsMate = require(`ejs-mate`);
 
+const catchAsync = require(`./utils/catchAsync`);
+
 const Property = require(`./models/property`);
 const Agent = require(`./models/agent`);
 
@@ -48,90 +50,117 @@ app.get(`/`, (req, res) => {
 });
 
 // property routes
-app.get(`/properties`, async (req, res) => {
-  const properties = await Property.find({});
-  const agents = await Agent.find({});
-  res.render(`properties/index`, { properties, agents });
-});
+app.get(
+  `/properties`,
+  catchAsync(async (req, res) => {
+    const properties = await Property.find({});
+    const agents = await Agent.find({});
+    res.render(`properties/index`, { properties, agents });
+  })
+);
 
 app.get(`/properties/add/`, (req, res) => {
   // res.send(`GET: /properties/add`);
   res.render(`properties/newPropertyForm`);
 });
-app.post(`/properties/add/`, async (req, res) => {
-  console.log(`In POST: /properties/add/`);
-  // processing the form submitted data to generate a property object
-  const { generatePropertyFromForm } = require("./seeds/helpers");
-  console.log(
-    `🚀 ✩ app.post ✩ generatePropertyFromForm`,
-    generatePropertyFromForm
-  );
-  const newProperty = new Property({ ...generatePropertyFromForm(req.body) });
+app.post(
+  `/properties/add/`,
+  catchAsync(async (req, res, err) => {
+    // processing the form submitted data to generate a property object
+    const { generatePropertyFromForm } = require("./seeds/helpers");
+    const newProperty = new Property({ ...generatePropertyFromForm(req.body) });
+    await newProperty.save();
+    res.redirect(`/properties/${newProperty._id}/`);
+  })
+);
 
-  await newProperty.save();
-});
+app.get(
+  `/properties/generate`,
+  catchAsync(async (req, res) => {
+    console.log(`In GET: /properties/generate`);
+    const { addPropertyGenerator } = require("./seeds/helpers");
+    const value = addPropertyGenerator();
+    const newProperty = new Property({ ...value });
 
-app.get(`/properties/generate`, async (req, res) => {
-  console.log(`In GET: /properties/generate`);
-  const { addPropertyGenerator } = require("./seeds/helpers");
-  const value = addPropertyGenerator();
-  const newProperty = new Property({ ...value });
+    await newProperty.save();
+    res.redirect(`/properties`);
+  })
+);
 
-  await newProperty.save();
-  res.redirect(`/properties`);
-});
+app.get(
+  `/properties/:id`,
+  catchAsync(async (req, res) => {
+    const property = await Property.findById(req.params.id);
 
-app.get(`/properties/:id`, async (req, res) => {
-  const property = await Property.findById(req.params.id);
+    const agent = await Agent.findOne({ agentCode: property.agentCode });
 
-  const agent = await Agent.findOne({ agentCode: property.agentCode });
+    res.render(`properties/showProperty`, { property, agent });
+  })
+);
+app.put(
+  `/properties/:id`,
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const updatedProperty = await Property.findByIdAndUpdate(
+      { _id: id },
+      { ...req.body }
+    );
+    res.redirect(`/properties/${id}/`);
+  })
+);
+app.delete(
+  `/properties/:id`,
+  catchAsync(async (req, res) => {
+    console.log(`DELETE REQUEST`);
+    const { id } = req.params;
+    await Property.findByIdAndDelete(id);
+    res.redirect(`/properties/`);
+  })
+);
 
-  res.render(`properties/showProperty`, { property, agent });
-});
-app.put(`/properties/:id`, async (req, res) => {
-  const { id } = req.params;
-  const updatedProperty = await Property.findByIdAndUpdate(
-    { _id: id },
-    { ...req.body }
-  );
-  res.redirect(`/properties/${id}/`);
-});
-app.delete(`/properties/:id`, async (req, res) => {
-  console.log(`DELETE REQUEST`);
-  const { id } = req.params;
-  await Property.findByIdAndDelete(id);
-  res.redirect(`/properties/`);
-});
+app.get(
+  `/properties/:id/edit/`,
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
 
-app.get(`/properties/:id/edit/`, async (req, res) => {
-  const { id } = req.params;
+    // getting the property data from the DB
+    const property = await Property.findById(id);
 
-  // getting the property data from the DB
-  const property = await Property.findById(id);
-
-  // res.send(`GET: /properties/${id}/edit/`);
-  res.render(`properties/editPropertyForm`, { property });
-});
+    // res.send(`GET: /properties/${id}/edit/`);
+    res.render(`properties/editPropertyForm`, { property });
+  })
+);
 
 // agent routes
-app.get(`/agents`, async (req, res) => {
-  const agents = await Agent.find({});
-  res.render(`agents/index`, { agents });
-});
+app.get(
+  `/agents`,
+  catchAsync(async (req, res) => {
+    const agents = await Agent.find({});
+    res.render(`agents/index`, { agents });
+  })
+);
 
-app.get(`/agents/:id`, async (req, res) => {
-  const { id } = req.params;
+app.get(
+  `/agents/:id`,
+  catchAsync(async (req, res) => {
+    const { id } = req.params;
 
-  const agent = await Agent.findById(id);
+    const agent = await Agent.findById(id);
 
-  const properties = await Property.find({ agentCode: agent.agentCode });
+    const properties = await Property.find({ agentCode: agent.agentCode });
 
-  res.render(`agents/showAgent`, { agent, properties });
-});
+    res.render(`agents/showAgent`, { agent, properties });
+  })
+);
 
 // 404 route
 app.use((req, res) => {
   res.status(404).send("Resource not found");
+});
+
+// error handling
+app.use((err, req, res, next) => {
+  res.send("Error occured!");
 });
 
 // starting the server
