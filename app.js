@@ -6,6 +6,7 @@ const morgan = require(`morgan`);
 const ejsMate = require(`ejs-mate`);
 
 const catchAsync = require(`./utils/catchAsync`);
+const ExpressError = require(`./utils/ExpressError`);
 
 const Property = require(`./models/property`);
 const Agent = require(`./models/agent`);
@@ -66,6 +67,12 @@ app.get(`/properties/add/`, (req, res) => {
 app.post(
   `/properties/add/`,
   catchAsync(async (req, res, err) => {
+    // error handling if there is missing data on the form
+    if (!req.body.title)
+      throw new ExpressError(
+        `ERR: Mandatory data (property title) missing.`,
+        400
+      );
     // processing the form submitted data to generate a property object
     const { generatePropertyFromForm } = require("./seeds/helpers");
     const newProperty = new Property({ ...generatePropertyFromForm(req.body) });
@@ -144,23 +151,26 @@ app.get(
   `/agents/:id`,
   catchAsync(async (req, res) => {
     const { id } = req.params;
-
     const agent = await Agent.findById(id);
-
     const properties = await Property.find({ agentCode: agent.agentCode });
-
     res.render(`agents/showAgent`, { agent, properties });
   })
 );
 
 // 404 route
-app.use((req, res) => {
-  res.status(404).send("Resource not found");
+app.all(`*`, (req, res, next) => {
+  // console.log(`🚀 ✩ In app.all: 404 route `);
+  // res.status(404).send("Resource not found");
+  next(new ExpressError(`Page not found`, 404));
 });
 
 // error handling
 app.use((err, req, res, next) => {
-  res.send("Error occured!");
+  // console.log(`🚀 ✩ In app.use: Error handling `);
+  const { statusCode = 500, message = `Something went wrong` } = err;
+  console.log(err);
+  res.status(statusCode).send(message);
+  // res.send("Unhandled error occurred!");
 });
 
 // starting the server
