@@ -6,9 +6,14 @@ const morgan = require(`morgan`);
 const ejsMate = require(`ejs-mate`);
 const Joi = require(`joi`);
 
+// custom middleware
 const catchAsync = require(`./utils/catchAsync`);
 const ExpressError = require(`./utils/ExpressError`);
 
+// schema validation with JOI
+const { propertySchemaJOI, agentSchemaJOI } = require(`./schemas`);
+
+// mongo schemas
 const Property = require(`./models/property`);
 const Agent = require(`./models/agent`);
 
@@ -46,6 +51,32 @@ app.use(methodOverride("_method"));
 // using morgan to log request data
 app.use(morgan(`dev`));
 
+// using Joi to validate schema
+const validatePropertyJOI = (req, res, next) => {
+  const result = propertySchemaJOI.validate(req.body);
+  // console.log(`🚀 ✩ catchAsync ✩ result`, result);
+  const { error } = result;
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(`,`);
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+
+const validateAgentJOI = (req, res, next) => {
+  // console.log(`In validateAgentJOI`);
+  const result = agentSchemaJOI.validate(req.body);
+  // console.log(`🚀 ✩ catchAsync ✩ result`, result);
+  const { error } = result;
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(`,`);
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+
 // route management
 app.get(`/`, (req, res) => {
   res.render(`home`);
@@ -67,38 +98,8 @@ app.get(`/properties/add/`, (req, res) => {
 });
 app.post(
   `/properties/add/`,
+  validatePropertyJOI,
   catchAsync(async (req, res, err) => {
-    // error handling if there is missing data on the form
-    // if (!req.body.title)
-    //   throw new ExpressError(
-    //     `ERR: Mandatory data (property title) missing.`,
-    //     400
-    //   );
-
-    // using Joi to validate schema
-    const propertySchemaJoi = Joi.object({
-      agentCode: Joi.string(),
-      title: Joi.string().required(),
-      image: Joi.string(),
-      type: Joi.string(),
-      rent: Joi.number().required().min(0),
-      area: Joi.string(),
-      city: Joi.string(),
-      postcode: Joi.string(),
-      bedrooms: Joi.number(),
-      bathrooms: Joi.number(),
-      latitude: Joi.number(),
-      longitude: Joi.number(),
-      features: Joi.array().items(Joi.string()),
-      description: Joi.string(),
-    });
-    const result = propertySchemaJoi.validate(req.body);
-    console.log(`🚀 ✩ catchAsync ✩ result`, result);
-    const { error } = result;
-    if (error) {
-      const msg = error.details.map((el) => el.message).join(`,`);
-      throw new ExpressError(msg, 400);
-    }
     // processing the form submitted data to generate a property object
     const { generatePropertyFromForm } = require("./seeds/helpers");
     const newProperty = new Property({ ...generatePropertyFromForm(req.body) });
@@ -132,6 +133,7 @@ app.get(
 );
 app.put(
   `/properties/:id`,
+  validatePropertyJOI,
   catchAsync(async (req, res) => {
     const { id } = req.params;
     const updatedProperty = await Property.findByIdAndUpdate(
@@ -172,6 +174,20 @@ app.get(
     res.render(`agents/index`, { agents });
   })
 );
+app.post(`/agents/add`, validateAgentJOI, async (req, res) => {
+  console.log(`In POST: /agents/add/`);
+  // TODO: create add agent form and then fetch that data from there. Using a dummy object here to test functionality
+  const agentObject = {
+    agentCode: `testAgent`,
+    name: `test`,
+    logo: `test`,
+    address: `test`,
+    phone: `test`,
+  };
+  const newAgent = new Agent({ ...agentObject });
+  await newAgent.save();
+  res.redirect(`/agents/${newAgent._id}/`);
+});
 
 app.get(
   `/agents/:id`,
