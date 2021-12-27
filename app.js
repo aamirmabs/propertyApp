@@ -4,6 +4,7 @@ const mongoose = require(`mongoose`);
 const methodOverride = require("method-override");
 const morgan = require(`morgan`);
 const ejsMate = require(`ejs-mate`);
+const Joi = require(`joi`);
 
 const catchAsync = require(`./utils/catchAsync`);
 const ExpressError = require(`./utils/ExpressError`);
@@ -68,11 +69,36 @@ app.post(
   `/properties/add/`,
   catchAsync(async (req, res, err) => {
     // error handling if there is missing data on the form
-    if (!req.body.title)
-      throw new ExpressError(
-        `ERR: Mandatory data (property title) missing.`,
-        400
-      );
+    // if (!req.body.title)
+    //   throw new ExpressError(
+    //     `ERR: Mandatory data (property title) missing.`,
+    //     400
+    //   );
+
+    // using Joi to validate schema
+    const propertySchemaJoi = Joi.object({
+      agentCode: Joi.string(),
+      title: Joi.string().required(),
+      image: Joi.string(),
+      type: Joi.string(),
+      rent: Joi.number().required().min(0),
+      area: Joi.string(),
+      city: Joi.string(),
+      postcode: Joi.string(),
+      bedrooms: Joi.number(),
+      bathrooms: Joi.number(),
+      latitude: Joi.number(),
+      longitude: Joi.number(),
+      features: Joi.array().items(Joi.string()),
+      description: Joi.string(),
+    });
+    const result = propertySchemaJoi.validate(req.body);
+    console.log(`🚀 ✩ catchAsync ✩ result`, result);
+    const { error } = result;
+    if (error) {
+      const msg = error.details.map((el) => el.message).join(`,`);
+      throw new ExpressError(msg, 400);
+    }
     // processing the form submitted data to generate a property object
     const { generatePropertyFromForm } = require("./seeds/helpers");
     const newProperty = new Property({ ...generatePropertyFromForm(req.body) });
