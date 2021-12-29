@@ -235,13 +235,14 @@ app.post(
 
     // req.body does not contain the agent id so we will add it manually
     const propertyData = { agentID: agentID, ...req.body };
-    console.log(`🚀 ✩ catchAsync ✩ data`, propertyData);
+    // console.log(`🚀 ✩ catchAsync ✩ data`, propertyData);
 
     // save the property in the DB
     const newProperty = new Property({ propertyData });
     await newProperty.save();
     console.log(`New property saved`);
 
+    // add entry of property id to agent.properties[]
     const agent = await Agent.findById(agentID);
     console.log(`🚀 ✩ catchAsync ✩ agent BEFORE`, agent);
     agent.properties.push(newProperty);

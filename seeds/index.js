@@ -50,7 +50,7 @@ const seedDataToDB = async (totalAgents, totalProperties) => {
     // using the helper function to generate a property
     // console.log(`=== CREATING A JS PROPERTY OBJECT ===`);
     const property = await helperFunctions.generateProperty();
-    console.log(property);
+    // console.log(property);
 
     // create a new MongoDB Object containing property details
     // console.log(`=== CREATING A MONGO PROPERTY OBJECT ===`);
@@ -59,6 +59,19 @@ const seedDataToDB = async (totalAgents, totalProperties) => {
     // save to Mongo
     // console.log(`=== BEGINNING DB DATA SAVE ===`);
     await propertyMongoObject.save();
+
+    // add entry of property id to the relevant agent.properties[]
+    const agent = await Agent.findById(propertyMongoObject.agentID);
+    // console.log(
+    //   `🚀 ✩ seedDataToDB ✩ propertyMongoObject.agentID`,
+    //   propertyMongoObject.agentID
+    // );
+    // console.log(`🚀 ✩ seedDataToDB ✩ agent`, agent);
+
+    console.log(`🚀 ✩ catchAsync ✩ agent.properties BEFORE`, agent.properties);
+    agent.properties.push(propertyMongoObject._id);
+    console.log(`🚀 ✩ catchAsync ✩ agent.properties AFTER`, agent.properties);
+    await agent.save();
 
     // console.log(`=== PROPERTY DATA SAVED ===`);
     // console.log(propertyMongoObject);
