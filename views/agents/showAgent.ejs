@@ -19,12 +19,13 @@
           <div class="agent-phone">
             Phone: <%= agent.phone %>
           </div>
+          <a href="/agents/<%= agent._id %>/properties/new" class="btn btn-sm btn-success">Add Property</a>
         </div>
       </div>
     </div>
     <div class="col-md-8">
       <h2 class="text-center">Properties listed by Agent</h2>
-      <% properties.forEach(property=> { %>
+      <% agent.properties.forEach(property=> { %>
         <div class="card mb-3 property-listing-card">
           <div class="row">
             <div class="col-md-5 image-column">

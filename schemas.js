@@ -13,8 +13,10 @@ const propertySchemaJOI = Joi.object({
   bathrooms: Joi.number(),
   latitude: Joi.number(),
   longitude: Joi.number(),
-  features: Joi.array().items(Joi.string()),
+  // features: Joi.array().items(Joi.string()),
+  features: Joi.array(),
   description: Joi.string(),
+  agent: Joi.string().alphanum(),
 });
 
 const agentSchemaJOI = Joi.object({
@@ -23,6 +25,7 @@ const agentSchemaJOI = Joi.object({
   logo: Joi.string(),
   address: Joi.string(),
   phone: Joi.string(),
+  properties: Joi.array(),
 });
 
 module.exports.propertySchemaJOI = propertySchemaJOI;
