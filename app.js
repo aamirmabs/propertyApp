@@ -265,6 +265,24 @@ app.get(
   })
 );
 
+// generate data route
+app.get(`/generate`, (req, res) => {
+  res.render(`generate`);
+});
+app.post(
+  `/generate`,
+  catchAsync(async (req, res) => {
+    console.log(req.body);
+    const { agents, properties } = req.body;
+
+    const { seedDataToDB } = require(`./seeds/index.js`);
+
+    seedDataToDB(agents, properties);
+
+    // res.redirect(`/agents/`);
+  })
+);
+
 // 404 route
 app.all(`*`, (req, res, next) => {
   // console.log(`🚀 ✩ In app.all: 404 route `);
