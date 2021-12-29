@@ -100,17 +100,6 @@ app.get(
     res.render(`properties/newPropertyForm`, { agents });
   })
 );
-// app.post(
-//   `/properties/add/`,
-//   validatePropertyJOI,
-//   catchAsync(async (req, res, err) => {
-//     // processing the form submitted data to generate a property object
-//     const { generatePropertyFromForm } = require("./seeds/helpers");
-//     const newProperty = new Property({ ...generatePropertyFromForm(req.body) });
-//     await newProperty.save();
-//     res.redirect(`/properties/${newProperty._id}/`);
-//   })
-// );
 app.post(
   `/properties/add/`,
   validatePropertyJOI,
@@ -145,11 +134,9 @@ app.get(
 app.get(
   `/properties/:id`,
   catchAsync(async (req, res) => {
-    const property = await Property.findById(req.params.id);
+    const property = await Property.findById(req.params.id).populate(`agentID`);
 
-    const agent = await Agent.findOne({ agentCode: property.agentCode });
-
-    res.render(`properties/showProperty`, { property, agent });
+    res.render(`properties/showProperty`, { property });
   })
 );
 app.put(
@@ -257,9 +244,8 @@ app.get(
   `/agents/:agentID`,
   catchAsync(async (req, res) => {
     const { agentID } = req.params;
-    const agent = await Agent.findById(agentID);
-    const properties = await Property.find({ agentCode: agent.agentCode });
-    res.render(`agents/showAgent`, { agent, properties });
+    const agent = await Agent.findById(agentID).populate(`properties`);
+    res.render(`agents/showAgent`, { agent });
   })
 );
 
