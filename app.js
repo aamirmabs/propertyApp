@@ -115,20 +115,17 @@ app.post(
   `/properties/add/`,
   validatePropertyJOI,
   catchAsync(async (req, res, err) => {
-    console.log(`req.body`);
-    console.log(req.body);
+    // processing the form submitted data and saving property to DB
+    const { generatePropertyFromForm } = require("./seeds/helpers");
+    const newProperty = new Property({ ...generatePropertyFromForm(req.body) });
+    await newProperty.save();
 
     // add the property id to agent.properties[] to track
     const agent = await Agent.findById(req.body.agent);
-    console.log(`🚀 ✩ catchAsync ✩ agent`, agent);
+    agent.properties.push(req.body.agent);
+    await agent.save();
 
-    // const agent = await Agent.findByIdAndUpdate({ agent });
-
-    // processing the form submitted data to generate a property object
-    const { generatePropertyFromForm } = require("./seeds/helpers");
-    const newProperty = new Property({ ...generatePropertyFromForm(req.body) });
-    // await newProperty.save();
-    // res.redirect(`/properties/${newProperty._id}/`);
+    res.redirect(`/properties/${newProperty._id}/`);
   })
 );
 
@@ -268,7 +265,7 @@ app.get(
 
 // generate data route
 app.get(`/generate`, (req, res) => {
-  res.render(`generate`);
+  res.render(`generate`, { generationStatus: false });
 });
 app.post(
   `/generate`,
@@ -280,6 +277,7 @@ app.post(
 
     seedDataToDB(agents, properties);
 
+    res.render(`generate`, { generationStatus: true });
     // res.redirect(`/agents/`);
   })
 );
