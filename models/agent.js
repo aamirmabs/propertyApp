@@ -23,6 +23,8 @@ agentsSchema.pre(`findOneAndDelete`, async function (data) {
 
 agentsSchema.post(`findOneAndDelete`, async function (deletedAgent) {
   console.log(`POST agentsSchema`);
+
+  console.log("deletedAgent:");
   console.log(deletedAgent);
 
   if (deletedAgent.properties.length) {
