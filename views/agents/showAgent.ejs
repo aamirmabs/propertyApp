@@ -20,6 +20,9 @@
             Phone: <%= agent.phone %>
           </div>
           <a href="/agents/<%= agent._id %>/properties/new" class="btn btn-sm btn-success">Add Property</a>
+          <form action="<%= `/agents/${agent._id}/?_method=DELETE` %>"
+            method="post"><button class="btn btn-danger d-inline-flex"
+              type="submit">Delete Agent</button></form>
         </div>
       </div>
     </div>
