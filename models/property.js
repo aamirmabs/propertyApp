@@ -1,7 +1,7 @@
 const mongoose = require(`mongoose`);
 const Schema = mongoose.Schema;
 
-const PropertiesSchema = new Schema({
+const propertiesSchema = new Schema({
   agentCode: String,
   title: String,
   image: String,
@@ -22,4 +22,14 @@ const PropertiesSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model(`Property`, PropertiesSchema);
+propertiesSchema.pre(`findOneAndDelete`, async function (data) {
+  console.log(`PRE propertiesSchema`);
+  console.log(data);
+});
+
+propertiesSchema.post(`findOneAndDelete`, async function (data) {
+  console.log(`POST propertiesSchema`);
+  console.log(data);
+});
+
+module.exports = mongoose.model(`Property`, propertiesSchema);

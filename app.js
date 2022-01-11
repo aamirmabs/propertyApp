@@ -86,7 +86,7 @@ app.get(`/`, (req, res) => {
 app.get(
   `/properties`,
   catchAsync(async (req, res) => {
-    const properties = await Property.find({});
+    const properties = await Property.find({}).populate(`agentID`);
     const agents = await Agent.find({});
     res.render(`properties/index`, { properties, agents });
   })
@@ -154,9 +154,12 @@ app.put(
 app.delete(
   `/properties/:id`,
   catchAsync(async (req, res) => {
-    console.log(`DELETE REQUEST`);
+    console.log(`In DELETE: /properties/:id`);
     const { id } = req.params;
+    // deleting the property entry from the DB
     await Property.findByIdAndDelete(id);
+    // cleaning up the agent.properties array to remove the data
+
     res.redirect(`/properties/`);
   })
 );
@@ -236,6 +239,20 @@ app.post(
     // res.render(`properties/newPropertyForm`);
     // res.render(`properties/newPropertyFromAgent`, { agent });
     res.redirect(`/agents/${agentID}`);
+  })
+);
+
+// delete an agent
+app.delete(
+  `/agents/:agentID`,
+  catchAsync(async (req, res) => {
+    console.log(`In DELETE: /agents/:agentID`);
+    const { agentID } = req.params;
+    const agent = await Agent.findByIdAndDelete(agentID);
+
+    // await Agent.findByIdAndDelete();
+    const agents = await Agent.find({});
+    res.render(`agents/index`, { agents });
   })
 );
 
