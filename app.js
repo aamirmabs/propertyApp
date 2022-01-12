@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== `production`) {
+  require(`dotenv`).config();
+}
+
 const express = require("express");
 const path = require(`path`);
 const mongoose = require(`mongoose`);
@@ -17,8 +21,11 @@ const { propertySchemaJOI, agentSchemaJOI } = require(`./schemas`);
 const Property = require(`./models/property`);
 const Agent = require(`./models/agent`);
 
-// connecting to the localhost mongodb server
-mongoose.connect(`mongodb://localhost:27017/propertyApp`, {
+// connecting to the mongodb server (local/remote)
+const dbUrl = process.env.DB_URL || `mongodb://localhost:27017/propertyApp`;
+
+// mongoose.connect(`mongodb://localhost:27017/propertyApp`, {
+mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -303,6 +310,7 @@ app.use((err, req, res, next) => {
 });
 
 // starting the server
-app.listen(3000, () => {
-  console.log(`Serving on port 3000`);
+const port = process.env.port || 3000;
+app.listen(port, () => {
+  console.log(`Serving on port ${port}`);
 });
