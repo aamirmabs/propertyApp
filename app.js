@@ -22,11 +22,10 @@ const Property = require(`./models/property`);
 const Agent = require(`./models/agent`);
 
 // connecting to the mongodb server (local/remote)
-const remote_dbUrl = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.6xpvs.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-const local_dbUrl = `mongodb://localhost:27017/propertyApp`;
+const dbUrl = process.env.DB_URL || `mongodb://localhost:27017/propertyApp`;
 
 // mongoose.connect(`mongodb://localhost:27017/propertyApp`, {
-mongoose.connect(remote_dbUrl, {
+mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
