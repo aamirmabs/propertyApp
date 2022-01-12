@@ -310,7 +310,7 @@ app.use((err, req, res, next) => {
 });
 
 // starting the server
-const port = process.env.port || 3000;
+const port = process.env.PORT_HEROKU || 3000;
 app.listen(port, () => {
   console.log(`Serving on port ${port}`);
 });
